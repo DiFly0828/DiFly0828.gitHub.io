@@ -1,6 +1,0 @@
-[submodule "DiFly0828.github.io"]
-	path = DiFly0828.github.io
-	url = https://github.com/DiFly0828/DiFly0828.github.io
-[submodule "themes/PaperMod"]
-	path = themes/PaperMod
-	url = https://github.com/adityatelange/hugo-PaperMod.git

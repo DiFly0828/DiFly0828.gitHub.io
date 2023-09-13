@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://DiFly0828.github.io/sitemap.xml
